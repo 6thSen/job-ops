@@ -338,6 +338,10 @@ export const getEnabledSources = (
       enabled.push(source);
       continue;
     }
+    if (source === "jobstreet_ph") {
+      enabled.push(source);
+      continue;
+    }
     if (
       source === "indeed" ||
       source === "linkedin" ||
