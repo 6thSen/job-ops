@@ -13,6 +13,8 @@ services:
     container_name: job-ops
     ports:
       - "3005:3001"
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
     volumes:
       # Persist database and generated PDFs
       - ./data:/app/data
@@ -84,6 +86,9 @@ services:
           action: sync+restart
         - path: ./extractors/wazzuf
           target: /app/extractors/wazzuf
+          action: sync+restart
+        - path: ./extractors/jobstreet_ph
+          target: /app/extractors/jobstreet_ph
           action: sync+restart
     restart: unless-stopped
     healthcheck:
