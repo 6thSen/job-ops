@@ -95,6 +95,7 @@ COPY extractors/seek/package*.json ./extractors/seek/
 COPY extractors/fiveamsat/package*.json ./extractors/fiveamsat/
 COPY extractors/wazzuf/package*.json ./extractors/wazzuf/
 COPY extractors/browser-utils/package*.json ./extractors/browser-utils/
+COPY extractors/jobstreet_ph/package*.json ./extractors/jobstreet_ph/
 
 # Install build-time Node dependencies on the native builder platform. The
 # resulting client/docs assets are architecture-neutral static files.
@@ -125,6 +126,7 @@ COPY extractors/seek ./extractors/seek
 COPY extractors/fiveamsat ./extractors/fiveamsat
 COPY extractors/wazzuf ./extractors/wazzuf
 COPY extractors/browser-utils ./extractors/browser-utils
+COPY extractors/jobstreet_ph ./extractors/jobstreet_ph
 
 # ============================================================================
 # PARALLEL BUILD STAGES
@@ -172,6 +174,7 @@ COPY extractors/seek/package*.json ./extractors/seek/
 COPY extractors/fiveamsat/package*.json ./extractors/fiveamsat/
 COPY extractors/wazzuf/package*.json ./extractors/wazzuf/
 COPY extractors/browser-utils/package*.json ./extractors/browser-utils/
+COPY extractors/jobstreet_ph/package*.json ./extractors/jobstreet_ph/
 
 # Install production Node dependencies only.
 RUN --mount=type=cache,id=npm-runtime-${TARGETARCH},target=/root/.npm \
@@ -267,6 +270,7 @@ COPY extractors/seek ./extractors/seek
 COPY extractors/fiveamsat ./extractors/fiveamsat
 COPY extractors/wazzuf ./extractors/wazzuf
 COPY extractors/browser-utils ./extractors/browser-utils
+COPY extractors/jobstreet_ph ./extractors/jobstreet_ph
 
 # Create runtime directories.
 RUN mkdir -p /app/data/pdfs /app/data/cloudflare-cookies /app/codex-home
