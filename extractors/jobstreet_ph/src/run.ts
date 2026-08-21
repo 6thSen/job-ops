@@ -33,10 +33,15 @@ function text(value: unknown): string | undefined {
   return typeof value === "string" && value.trim() ? value.trim() : undefined;
 }
 
-function locationOf(item: Record<string, unknown>): string | undefined {
+function locationOf(item: Record<string, unknown>): { location?: string; country?: string } {
   const locations = Array.isArray(item.locations) ? item.locations : [];
   const labels = locations.flatMap((v) => v && typeof v === "object" ? [text((v as Record<string, unknown>).label)] : []).filter(Boolean);
-  return labels.join(", ") || undefined;
+  const countryCodes = locations.flatMap((v) => v && typeof v === "object" ? [text((v as Record<string, unknown>).countryCode)] : []).filter(Boolean);
+  const location = labels.join(", ") || undefined;
+  let country: string | undefined;
+  if (countryCodes.includes("PH")) country = "Philippines";
+  else if (countryCodes[0]) country = countryCodes[0];
+  return { location, country };
 }
 
 export function parseJobStreetListing(item: unknown): CreateJobInput | null {
@@ -49,6 +54,7 @@ export function parseJobStreetListing(item: unknown): CreateJobInput | null {
   const arrangement = raw.workArrangements && typeof raw.workArrangements === "object" ? text((raw.workArrangements as Record<string, unknown>).displayText) : undefined;
   const workTypes = Array.isArray(raw.workTypes) ? raw.workTypes.map(text).filter(Boolean).join(", ") : undefined;
   const classifications = Array.isArray(raw.classifications) ? raw.classifications.map((v) => v && typeof v === "object" ? text(((v as Record<string, unknown>).classification as Record<string, unknown> | undefined)?.description) : undefined).filter(Boolean).join(", ") : undefined;
+  const { location, country } = locationOf(raw);
   return {
     source: "jobstreet_ph",
     sourceJobId: id,
@@ -56,7 +62,10 @@ export function parseJobStreetListing(item: unknown): CreateJobInput | null {
     employer,
     jobUrl: `https://ph.jobstreet.com/job/${id}`,
     applicationLink: `https://ph.jobstreet.com/job/${id}`,
-    location: locationOf(raw),
+    location,
+    locationEvidence: location
+      ? { location, country, countryKey: country ? country.toLowerCase() : undefined, source: "jobstreet_ph" }
+      : undefined,
     salary: text(raw.salaryLabel),
     datePosted: text(raw.listingDate),
     jobDescription: text(raw.teaser) ?? (Array.isArray(raw.bulletPoints) ? raw.bulletPoints.map(text).filter(Boolean).join("\n") : undefined),

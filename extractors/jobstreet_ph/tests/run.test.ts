@@ -14,4 +14,14 @@ describe("JobStreet Philippines extractor", () => {
     expect(calls[0]).toContain("siteKey=ph");
     expect(buildSearchUrl("communications", "Metro Manila", 1)).toContain("sortmode=ListedDate");
   });
+  it("populates locationEvidence with the country so the location filter keeps jobs", () => {
+    const job = parseJobStreetListing({ id: "94112914", title: "Ops", companyName: "Jollibee", locations: [{ label: "Pasig City, Metro Manila", countryCode: "PH" }] });
+    expect(job?.location).toBe("Pasig City, Metro Manila");
+    expect(job?.locationEvidence).toMatchObject({
+      location: "Pasig City, Metro Manila",
+      country: "Philippines",
+      countryKey: "philippines",
+      source: "jobstreet_ph",
+    });
+  });
 });
