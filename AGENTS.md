@@ -99,6 +99,7 @@ When adding a new extractor workspace under `extractors/`:
 - Update all relevant `Dockerfile` stages so the extractor's `package*.json` files are copied before `npm install`, and the extractor directory itself is copied into build/runtime images.
 - Update deployment coverage in `orchestrator/src/server/extractors/deployment.test.ts` so Docker/compose support is asserted for the new extractor.
 - If this is missed, the source can appear in shared settings/UI but still fail at runtime as "not available at runtime" because the extractor manifest is not present inside the container.
+- Add the source to the **client-side enable-list** in `orchestrator/src/client/pages/orchestrator/utils.ts`, `getEnabledSources()`. It pushes a hard-coded subset of sources via explicit `if (source === "...")` branches; a new auth-free extractor not listed there is silently dropped from `enabledSources` and never shows in the source dropdown — even when fully registered and Dockerfile'd. Add `if (source === "<name>") { enabled.push(source); continue; }`.
 
 ## Validation / Verification
 
